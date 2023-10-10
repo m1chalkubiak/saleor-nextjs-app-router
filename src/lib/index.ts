@@ -13,15 +13,21 @@ export async function executeGraphQL<Result, Variables>({
 	headers,
 	cache,
 	tags,
+	skip = false,
 }: {
 	query: TypedDocumentString<Result, Variables>;
 	variables: Variables;
 	headers?: HeadersInit;
 	cache?: RequestCache;
 	tags?: string[];
-}): Promise<Result> {
+	skip?: boolean;
+}): Promise<Result | null> {
 	if (!endpoint) {
 		throw new Error("Missing SALEOR_API_URL");
+	}
+
+	if (skip) {
+		return null;
 	}
 
 	const result = await fetch(endpoint, {

@@ -11,13 +11,16 @@ export const generateMetadata = () => {
 };
 
 export async function generateStaticParams() {
-	const { products } = await executeGraphQL({
+	const productsData = await executeGraphQL({
 		query: ProductListDocument,
 		variables: {
 			channel: "default-channel",
 			first: 12,
 		},
 	});
+
+	const products = productsData?.products;
+
 	const paths = products?.edges.map(({ node: { id } }) => ({ id }));
 
 	return paths;
@@ -30,7 +33,7 @@ export default async function Page({
 	params: { id: string };
 	searchParams?: { variant?: string };
 }) {
-	const { product } = await executeGraphQL({
+	const productData = await executeGraphQL({
 		query: ProductDocument,
 		variables: {
 			channel: "default-channel",
@@ -38,6 +41,8 @@ export default async function Page({
 		},
 		tags: [params.id],
 	});
+
+	const product = productData?.product;
 
 	if (!product) {
 		notFound();
