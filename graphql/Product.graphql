@@ -6,5 +6,9 @@ query Product($id: ID!, $channel: String!) {
 			url
 			alt
 		}
+		variants {
+			name
+			id
+		}
 	}
 }

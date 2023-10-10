@@ -2,6 +2,7 @@ import Image from "next/image";
 import { executeGraphQL } from "@/lib";
 import { ProductDocument, ProductListDocument } from "@/generated/graphql";
 import { notFound } from "next/navigation";
+import VariantSelector from "./VariantSelector";
 
 export const generateMetadata = () => {
 	return {
@@ -22,7 +23,12 @@ export async function generateStaticParams() {
 	return paths;
 }
 
-export default async function Page({ params }: { params: { id: string } }) {
+export default async function Page({
+	params,
+}: {
+	params: { id: string };
+	searchParams?: { variant?: string };
+}) {
 	const { product } = await executeGraphQL({
 		query: ProductDocument,
 		variables: {
@@ -52,9 +58,10 @@ export default async function Page({ params }: { params: { id: string } }) {
 			</div>
 			<div className="flex-auto px-6">
 				<div className="flex flex-wrap">
-					<h1 className="flex-auto text-lg font-semibold text-slate-900">{product.name}</h1>
-					<div className="text-lg font-semibold text-slate-500">$13.00</div>
-					<div className="mt-2 w-full flex-none text-sm font-medium text-slate-700">In stock</div>
+					<div className="flex w-full flex-auto justify-between">
+						<h1 className="text-2xl font-bold tracking-tight text-gray-900 sm:text-3xl">{product.name}</h1>
+					</div>
+					{product?.variants?.length && <VariantSelector variants={product?.variants} />}
 				</div>
 			</div>
 		</div>
