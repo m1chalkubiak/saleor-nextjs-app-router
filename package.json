@@ -9,7 +9,8 @@
 		"lint": "next lint --fix --dir src",
 		"format": "prettier --write .",
 		"generate": "graphql-codegen --config .graphqlrc.ts",
-		"postinstall": "pnpm generate"
+		"postinstall": "pnpm generate",
+		"prepare": "husky install"
 	},
 	"dependencies": {
 		"graphql": "16.8.0",
@@ -32,7 +33,7 @@
 		"eslint": "8.49.0",
 		"eslint-config-next": "13.4.19",
 		"eslint-config-prettier": "9.0.0",
-		"husky": "^4.2.5",
+		"husky": "8.0.3",
 		"postcss": "8.4.29",
 		"prettier": "3.0.3",
 		"prettier-plugin-tailwindcss": "0.5.4",
@@ -42,10 +43,5 @@
 	"engines": {
 		"node": ">=18",
 		"pnpm": ">=8"
-	},
-	"husky": {
-		"hooks": {
-			"pre-commit": "run lint"
-		}
 	}
 }
