@@ -25,9 +25,12 @@ export default async function Navbar() {
 			checkoutId: checkoutId?.value ?? "",
 		},
 		skip: !checkoutId?.value,
+		tags: ["checkout"],
 	});
 
 	const products = checkoutData?.checkout?.lines ?? [];
+
+	const productsAmount = products.reduce((amount, { quantity }) => amount + quantity, 0);
 
 	return (
 		<div className={styles.background}>
@@ -41,7 +44,7 @@ export default async function Navbar() {
 
 					<div className={styles.menuSection}></div>
 					<Suspense fallback={<Placeholder />}>
-						<CartIcon productsAmount={products.length} />
+						<CartIcon productsAmount={productsAmount} />
 					</Suspense>
 				</div>
 			</div>

@@ -1,7 +1,11 @@
+import { Suspense } from "react";
 import Image from "next/image";
+import { notFound } from "next/navigation";
+
 import { executeGraphQL } from "@/lib";
 import { ProductDocument, ProductListDocument } from "@/generated/graphql";
-import { notFound } from "next/navigation";
+import Placeholder from "@/ui/atoms/Placeholder";
+import AddToCartButton from "./AddToCartButton";
 import VariantSelector from "./VariantSelector";
 
 export const generateMetadata = () => {
@@ -79,7 +83,13 @@ export default async function Page({
 							</span>
 						)}
 					</div>
-					{product?.variants?.length && <VariantSelector variants={product?.variants} />}
+					{product?.variants?.length && (
+						<Suspense fallback={<Placeholder />}>
+							<VariantSelector variants={product?.variants} />
+						</Suspense>
+					)}
+
+					<AddToCartButton />
 				</div>
 			</div>
 		</div>

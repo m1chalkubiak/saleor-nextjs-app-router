@@ -1,6 +1,6 @@
 "use client";
 
-import { useEffect } from "react";
+import { useCallback, useEffect, useMemo } from "react";
 import type { ChangeEvent } from "react";
 import { usePathname, useRouter, useSearchParams } from "next/navigation";
 
@@ -10,22 +10,28 @@ export default function VariantSelector({ variants }: { variants: { id: string; 
 	const router = useRouter();
 	const pathname = usePathname();
 	const searchParams = useSearchParams();
-	const currentParams = new URLSearchParams(Array.from(searchParams.entries()));
+	const currentParams = useMemo(
+		() => new URLSearchParams(Array.from(searchParams.entries())),
+		[searchParams],
+	);
 	const currentVariant = currentParams.get("variant");
 	const defaultVariant = variants[0].id;
 
-	const updateVariantParam = (variant: string, type?: "replace" | "push") => {
-		currentParams.set("variant", variant);
+	const updateVariantParam = useCallback(
+		(variant: string, type?: "replace" | "push") => {
+			currentParams.set("variant", variant);
 
-		const search = currentParams.toString();
-		const query = search ? `?${search}` : "";
+			const search = currentParams.toString();
+			const query = search ? `?${search}` : "";
 
-		if (type === "replace") {
-			return router.replace(`${pathname}${query}`);
-		}
+			if (type === "replace") {
+				return router.replace(`${pathname}${query}`);
+			}
 
-		return router.push(`${pathname}${query}`);
-	};
+			return router.push(`${pathname}${query}`);
+		},
+		[currentParams, pathname, router],
+	);
 
 	const handleOnChange = (event: ChangeEvent<HTMLSelectElement>) => {
 		updateVariantParam(event.target.value);
@@ -35,7 +41,7 @@ export default function VariantSelector({ variants }: { variants: { id: string; 
 		if (!currentVariant) {
 			updateVariantParam(defaultVariant, "replace");
 		}
-	}, []);
+	}, [currentVariant, updateVariantParam, defaultVariant]);
 
 	useEffect(() => {
 		if (currentVariant) {
