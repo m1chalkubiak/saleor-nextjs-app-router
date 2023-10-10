@@ -4,6 +4,8 @@ import { useEffect } from "react";
 import type { ChangeEvent } from "react";
 import { usePathname, useRouter, useSearchParams } from "next/navigation";
 
+import { updateProductVariantData } from "./actions";
+
 export default function VariantSelector({ variants }: { variants: { id: string; name: string }[] }) {
 	const router = useRouter();
 	const pathname = usePathname();
@@ -12,13 +14,17 @@ export default function VariantSelector({ variants }: { variants: { id: string; 
 	const currentVariant = currentParams.get("variant");
 	const defaultVariant = variants[0].id;
 
-	const updateVariantParam = (variant: string) => {
+	const updateVariantParam = (variant: string, type?: "replace" | "push") => {
 		currentParams.set("variant", variant);
 
 		const search = currentParams.toString();
 		const query = search ? `?${search}` : "";
 
-		router.replace(`${pathname}${query}`);
+		if (type === "replace") {
+			return router.replace(`${pathname}${query}`);
+		}
+
+		return router.push(`${pathname}${query}`);
 	};
 
 	const handleOnChange = (event: ChangeEvent<HTMLSelectElement>) => {
@@ -27,9 +33,15 @@ export default function VariantSelector({ variants }: { variants: { id: string; 
 
 	useEffect(() => {
 		if (!currentVariant) {
-			updateVariantParam(defaultVariant);
+			updateVariantParam(defaultVariant, "replace");
 		}
 	}, []);
+
+	useEffect(() => {
+		if (currentVariant) {
+			updateProductVariantData(currentVariant);
+		}
+	}, [currentVariant]);
 
 	return (
 		<div>

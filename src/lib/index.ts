@@ -12,11 +12,13 @@ export async function executeGraphQL<Result, Variables>({
 	variables,
 	headers,
 	cache,
+	tags,
 }: {
 	query: TypedDocumentString<Result, Variables>;
 	variables: Variables;
 	headers?: HeadersInit;
 	cache?: RequestCache;
+	tags?: string[];
 }): Promise<Result> {
 	if (!endpoint) {
 		throw new Error("Missing SALEOR_API_URL");
@@ -33,6 +35,9 @@ export async function executeGraphQL<Result, Variables>({
 			...(variables && { variables }),
 		}),
 		cache,
+		next: {
+			tags,
+		},
 	});
 
 	const body = (await result.json()) as GraphQlErrorRespone<Result>;

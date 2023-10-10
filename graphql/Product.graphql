@@ -9,6 +9,14 @@ query Product($id: ID!, $channel: String!) {
 		variants {
 			name
 			id
+			pricing {
+				price {
+					gross {
+						amount
+						currency
+					}
+				}
+			}
 		}
 	}
 }

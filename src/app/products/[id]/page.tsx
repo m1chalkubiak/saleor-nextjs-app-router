@@ -25,6 +25,7 @@ export async function generateStaticParams() {
 
 export default async function Page({
 	params,
+	searchParams,
 }: {
 	params: { id: string };
 	searchParams?: { variant?: string };
@@ -35,11 +36,17 @@ export default async function Page({
 			channel: "default-channel",
 			id: decodeURIComponent(params.id),
 		},
+		tags: [params.id],
 	});
 
 	if (!product) {
 		notFound();
 	}
+
+	const variant = searchParams?.variant ?? "";
+	const productVariants = product?.variants;
+	const currentVariant = productVariants?.find(({ id }) => variant === id);
+	const variantPrice = currentVariant?.pricing?.price?.gross;
 
 	return (
 		<div className="flex">
@@ -60,6 +67,12 @@ export default async function Page({
 				<div className="flex flex-wrap">
 					<div className="flex w-full flex-auto justify-between">
 						<h1 className="text-2xl font-bold tracking-tight text-gray-900 sm:text-3xl">{product.name}</h1>
+						{variantPrice && (
+							<span className="text-3xl tracking-tight text-gray-900">
+								{variantPrice.amount}
+								{variantPrice.currency}
+							</span>
+						)}
 					</div>
 					{product?.variants?.length && <VariantSelector variants={product?.variants} />}
 				</div>
