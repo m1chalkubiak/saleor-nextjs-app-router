@@ -1,0 +1,10 @@
+mutation CheckoutRemoveProduct($checkoutId: ID!, $lineId: ID!) {
+	checkoutLinesDelete(id: $checkoutId, linesIds: [$lineId]) {
+		checkout {
+			...CheckoutFragment
+		}
+		errors {
+			message
+		}
+	}
+}

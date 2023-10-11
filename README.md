@@ -3,42 +3,12 @@
 <img width="1383" alt="Saleor Example: Next.js 13 App Router Starter" src="https://github.com/saleor/example-nextjs-app-router-starter/assets/200613/2de5b286-a05c-4eee-9591-b4b01c3c7ee7">
 
 <div align="center">
-  <h1>Next.js (App Router) Starter</h1>
+  <h1>Next.js (App Router) applications with Saleor.</h1>
 </div>
 
 <div align="center">
-  <p>A minimalistic boilerplate to start developing Next.js applications with <a href="https://github.com/saleor/saleor">Saleor</a>.</p>
+  <p>Implementing checkout using the new Nextjs app router approach.</p>
 </div>
-
-<div align="center">
-  <a href="https://stackblitz.com/github/saleor/example-nextjs-app-router-starter">
-    <img
-      alt="Open in StackBlitz"
-      src="https://developer.stackblitz.com/img/open_in_stackblitz.svg"
-      target="_blank"
-    />
-  </a>
-</div>
-
-<br/>
-
-<div align="center">
-  <a href="https://saleor.io/">🏠 Website</a>
-  <span> • </span>
-  <a href="https://docs.saleor.io/docs/3.x/">📚 Docs</a>
-  <span> • </span>
-  <a href="https://saleor.io/blog/">📰 Blog</a>
-  <span> • </span>
-  <a href="https://twitter.com/getsaleor">🐦 Twitter</a>
-  <span> • </span>
-  <a href="https://discord.gg/H52JTZAtSH">💬 Discord</a>
-</div>
-
-## Motivation
-
-🤏 **Bare bones**: Useful for prototyping or building your stack from scratch.
-
-💪 **Typesafe**: Get productive with code generation and types.
 
 ## Stack:
 

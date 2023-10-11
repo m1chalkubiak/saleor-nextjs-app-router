@@ -1,0 +1,16 @@
+mutation CheckoutPaymentCreate($checkoutId: ID!, $amout: PositiveDecimal!) {
+	checkoutPaymentCreate(
+		id: $checkoutId
+		input: { amount: $amout, gateway: "mirumee.payments.dummy", token: "4000000000000069" }
+	) {
+		payment {
+			id
+			gateway
+			token
+		}
+		errors {
+			field
+			message
+		}
+	}
+}

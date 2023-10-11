@@ -1,7 +1,12 @@
+import { Suspense } from "react";
 import Image from "next/image";
+import { notFound } from "next/navigation";
+
 import { executeGraphQL } from "@/lib";
 import { ProductDocument, ProductListDocument } from "@/generated/graphql";
-import { notFound } from "next/navigation";
+import Placeholder from "@/ui/atoms/Placeholder";
+import AddToCartButton from "./AddToCartButton";
+import VariantSelector from "./VariantSelector";
 
 export const generateMetadata = () => {
 	return {
@@ -10,30 +15,47 @@ export const generateMetadata = () => {
 };
 
 export async function generateStaticParams() {
-	const { products } = await executeGraphQL({
+	const productsData = await executeGraphQL({
 		query: ProductListDocument,
 		variables: {
 			channel: "default-channel",
 			first: 12,
 		},
 	});
+
+	const products = productsData?.products;
+
 	const paths = products?.edges.map(({ node: { id } }) => ({ id }));
 
 	return paths;
 }
 
-export default async function Page({ params }: { params: { id: string } }) {
-	const { product } = await executeGraphQL({
+export default async function Page({
+	params,
+	searchParams,
+}: {
+	params: { id: string };
+	searchParams?: { variant?: string };
+}) {
+	const productData = await executeGraphQL({
 		query: ProductDocument,
 		variables: {
 			channel: "default-channel",
 			id: decodeURIComponent(params.id),
 		},
+		tags: [params.id],
 	});
+
+	const product = productData?.product;
 
 	if (!product) {
 		notFound();
 	}
+
+	const variant = searchParams?.variant ?? "";
+	const productVariants = product?.variants;
+	const currentVariant = productVariants?.find(({ id }) => variant === id);
+	const variantPrice = currentVariant?.pricing?.price?.gross;
 
 	return (
 		<div className="flex">
@@ -52,9 +74,22 @@ export default async function Page({ params }: { params: { id: string } }) {
 			</div>
 			<div className="flex-auto px-6">
 				<div className="flex flex-wrap">
-					<h1 className="flex-auto text-lg font-semibold text-slate-900">{product.name}</h1>
-					<div className="text-lg font-semibold text-slate-500">$13.00</div>
-					<div className="mt-2 w-full flex-none text-sm font-medium text-slate-700">In stock</div>
+					<div className="flex w-full flex-auto justify-between">
+						<h1 className="text-2xl font-bold tracking-tight text-gray-900 sm:text-3xl">{product.name}</h1>
+						{variantPrice && (
+							<span className="text-3xl tracking-tight text-gray-900">
+								{variantPrice.amount}
+								{variantPrice.currency}
+							</span>
+						)}
+					</div>
+					{product?.variants?.length && (
+						<Suspense fallback={<Placeholder />}>
+							<VariantSelector variants={product?.variants} />
+						</Suspense>
+					)}
+
+					<AddToCartButton />
 				</div>
 			</div>
 		</div>
