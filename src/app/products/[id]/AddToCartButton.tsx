@@ -2,7 +2,7 @@
 
 import { useSearchParams } from "next/navigation";
 
-import Button from "@/ui/atoms/Button";
+import SubmitButton from "@/ui/components/SubmitButton";
 import { addToCart } from "./actions";
 
 export default function AddToCartButton() {
@@ -18,8 +18,8 @@ export default function AddToCartButton() {
 	};
 
 	return (
-		<Button type="button" onClick={handleOnClick}>
-			Add to cart
-		</Button>
+		<form action={handleOnClick} className="flex w-full">
+			<SubmitButton type="submit">Add to cart</SubmitButton>
+		</form>
 	);
 }

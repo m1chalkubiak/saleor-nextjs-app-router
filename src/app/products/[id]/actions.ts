@@ -2,6 +2,7 @@
 
 import { revalidateTag } from "next/cache";
 import { cookies } from "next/headers";
+import { redirect } from "next/navigation";
 import { executeGraphQL } from "@/lib";
 import { ProductAddVariantToCartDocument } from "@/generated/graphql";
 
@@ -28,5 +29,6 @@ export async function addToCart(productVariantId: string) {
 		// @TODO Error handling
 	} else {
 		revalidateTag("checkout");
+		redirect("/cart");
 	}
 }
