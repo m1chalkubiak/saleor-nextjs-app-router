@@ -1,0 +1,33 @@
+mutation CheckoutUpdateBillingAddress($checkoutId: ID!) {
+	checkoutBillingAddressUpdate(
+		id: $checkoutId
+		validationRules: { checkFieldsFormat: false, checkRequiredFields: false }
+		billingAddress: {
+			firstName: "John"
+			streetAddress1: "Some Street"
+			city: "Warsaw"
+			country: PL
+			postalCode: "22-100"
+		}
+	) {
+		checkout {
+			id
+			billingAddress {
+				streetAddress1
+				city
+				cityArea
+				postalCode
+				country {
+					code
+				}
+				countryArea
+			}
+			totalPrice {
+				gross {
+					amount
+					currency
+				}
+			}
+		}
+	}
+}

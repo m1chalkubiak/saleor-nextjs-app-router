@@ -2,12 +2,20 @@
 
 import { cookies } from "next/headers";
 import { revalidatePath } from "next/cache";
+import { redirect } from "next/navigation";
+
 import { executeGraphQL } from "@/lib";
 import {
 	CheckoutUpdateProductQuantityDocument,
 	CheckoutUpdateProductQuantityMutationVariables,
 	CheckoutRemoveProductDocument,
+	CheckoutCompleteDocument,
+	CheckoutUpdateShippingAddressDocument,
+	CheckoutUpdateDeliveryMethodDocument,
+	CheckoutUpdateBillingAddressDocument,
+	CheckoutPaymentCreateDocument,
 } from "@/generated/graphql";
+import { createCart } from "@/app/actions";
 
 export const changeProductQuantity = async (
 	lines: CheckoutUpdateProductQuantityMutationVariables["lines"],
@@ -51,4 +59,68 @@ export async function removeProduct(lineId: string) {
 	}
 
 	revalidatePath("/cart");
+}
+
+export async function checkoutSubmit() {
+	const cookieStore = cookies();
+	const checkoutId = cookieStore.get("checkoutId");
+
+	await executeGraphQL({
+		query: CheckoutUpdateShippingAddressDocument,
+		variables: {
+			checkoutId: checkoutId?.value ?? "",
+		},
+		skip: !checkoutId?.value,
+	});
+
+	await executeGraphQL({
+		query: CheckoutUpdateDeliveryMethodDocument,
+		variables: {
+			checkoutId: checkoutId?.value ?? "",
+		},
+		skip: !checkoutId?.value,
+	});
+
+	const updateBillingAddressData = await executeGraphQL({
+		query: CheckoutUpdateBillingAddressDocument,
+		variables: {
+			checkoutId: checkoutId?.value ?? "",
+		},
+		skip: !checkoutId?.value,
+	});
+
+	const amout =
+		updateBillingAddressData?.checkoutBillingAddressUpdate?.checkout?.totalPrice.gross.amount ?? 0;
+
+	// @TODO Mock above data in create checkout mutation
+
+	const paymentCreateData = await executeGraphQL({
+		query: CheckoutPaymentCreateDocument,
+		variables: {
+			checkoutId: checkoutId?.value ?? "",
+			amout,
+		},
+		skip: !checkoutId?.value,
+	});
+
+	if (paymentCreateData?.checkoutPaymentCreate?.errors.length) {
+		// @TODO Error handling
+	}
+
+	const data = await executeGraphQL({
+		query: CheckoutCompleteDocument,
+		variables: {
+			checkoutId: checkoutId?.value ?? "",
+		},
+		skip: !checkoutId?.value,
+	});
+
+	if (data?.checkoutComplete?.errors.length) {
+		// @TODO Error handling
+	} else {
+		cookies().delete("checkoutId");
+		await createCart();
+		revalidatePath("/cart");
+		// redirect("/orders");
+	}
 }

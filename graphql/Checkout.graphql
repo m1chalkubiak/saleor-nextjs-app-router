@@ -48,5 +48,13 @@ query Checkout($checkoutId: ID!) {
 				currency
 			}
 		}
+		shippingMethods {
+			id
+			name
+			price {
+				amount
+				currency
+			}
+		}
 	}
 }

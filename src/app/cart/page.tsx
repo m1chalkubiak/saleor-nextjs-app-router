@@ -1,11 +1,13 @@
 import Link from "next/link";
 import Image from "next/image";
 import { cookies } from "next/headers";
+
 import { CheckoutDocument } from "@/generated/graphql";
 import { executeGraphQL } from "@/lib";
-import Button from "@/ui/atoms/Button";
-import RemoveProductButton from "@/app/cart/RemoveProductButton";
-import UpdateProductQuantity from "@/app/cart/UpdateProductQuantity";
+
+import RemoveProductButton from "./RemoveProductButton";
+import UpdateProductQuantity from "./UpdateProductQuantity";
+import CheckoutSubmitButton from "./CheckoutSubmitButton";
 
 export const metadata = {
 	title: "Shopping Cart | Saleor Storefront",
@@ -105,6 +107,7 @@ export default async function Page() {
 										{subtotalPrice.tax?.amount} {subtotalPrice?.tax?.currency}
 									</span>
 								</div>
+								{/* // @TODO add shipping cost */}
 								<hr className="my-2" />
 								{totalPrice && (
 									<div className="mb-2 flex justify-between">
@@ -114,7 +117,7 @@ export default async function Page() {
 										</span>
 									</div>
 								)}
-								<Button>Checkout</Button>
+								<CheckoutSubmitButton />
 							</div>
 						)}
 					</div>

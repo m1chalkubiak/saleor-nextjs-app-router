@@ -1,0 +1,21 @@
+mutation CheckoutUpdateShippingAddress($checkoutId: ID!) {
+	checkoutShippingAddressUpdate(
+		id: $checkoutId
+		shippingAddress: {
+			firstName: "John"
+			streetAddress1: "Some Street"
+			city: "Warsaw"
+			country: PL
+			postalCode: "22-100"
+		}
+	) {
+		checkout {
+			id
+		}
+		errors {
+			field
+			message
+			code
+		}
+	}
+}
