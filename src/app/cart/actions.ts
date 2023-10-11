@@ -121,6 +121,6 @@ export async function checkoutSubmit() {
 		cookies().delete("checkoutId");
 		await createCart();
 		revalidatePath("/cart");
-		// redirect("/orders");
+		redirect("/");
 	}
 }
