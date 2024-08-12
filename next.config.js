@@ -8,6 +8,9 @@ const nextConfig = {
 	images: {
 		domains: url ? [url.hostname] : [],
 	},
+	experimental: {
+		serverActions: true,
+	},
 };
 
 module.exports = nextConfig;

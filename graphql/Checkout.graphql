@@ -1,0 +1,60 @@
+query Checkout($checkoutId: ID!) {
+	checkout(id: $checkoutId) {
+		id
+		email
+		lines {
+			id
+			quantity
+			totalPrice {
+				gross {
+					amount
+					currency
+				}
+			}
+			variant {
+				product {
+					id
+					name
+					slug
+					thumbnail {
+						url
+						alt
+					}
+				}
+				pricing {
+					price {
+						gross {
+							amount
+							currency
+						}
+					}
+				}
+				name
+			}
+		}
+		totalPrice {
+			gross {
+				amount
+				currency
+			}
+		}
+		subtotalPrice {
+			net {
+				amount
+				currency
+			}
+			tax {
+				amount
+				currency
+			}
+		}
+		shippingMethods {
+			id
+			name
+			price {
+				amount
+				currency
+			}
+		}
+	}
+}

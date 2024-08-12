@@ -1,0 +1,10 @@
+mutation CheckoutUpdateProductQuantity($checkoutId: ID!, $lines: [CheckoutLineUpdateInput!]!) {
+	checkoutLinesUpdate(id: $checkoutId, lines: $lines) {
+		checkout {
+			...CheckoutFragment
+		}
+		errors {
+			message
+		}
+	}
+}
